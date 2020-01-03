@@ -2475,7 +2475,16 @@ dec_nr_big_small_task(struct hmp_sched_stats *stats, struct task_struct *p)
 	else if (is_small_task(p))
 		stats->nr_small_tasks--;
 
-	BUG_ON(stats->nr_big_tasks < 0 || stats->nr_small_tasks < 0);
+	if (unlikely(stats->nr_big_tasks < 0)) {
+		WARN(1, "HMP: negative nr_big_tasks after dequeuing %d/%s\n", p->pid, p->comm);
+		stats->nr_big_tasks = 0;
+	}
+	if (unlikely(stats->nr_small_tasks < 0)) {
+		WARN(1, "HMP: negative nr_small_tasks after dequeuing %d/%s\n", p->pid, p->comm);
+		stats->nr_small_tasks = 0;
+	}
+	/* BUG_ON(stats->nr_big_tasks < 0 || stats->nr_small_tasks < 0);
+	 */
 }
 
 static void

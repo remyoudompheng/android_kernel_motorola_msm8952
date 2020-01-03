@@ -1015,7 +1015,10 @@ dec_cumulative_runnable_avg(struct hmp_sched_stats *stats,
 
 	stats->cumulative_runnable_avg -= task_load;
 
-	BUG_ON((s64)stats->cumulative_runnable_avg < 0);
+	if (unlikely((s64)stats->cumulative_runnable_avg < 0)) {
+		WARN(1, "HMP: negative cumulative_runnable_avg after dequeuing %d/%s\n", p->pid, p->comm);
+		stats->cumulative_runnable_avg = 0;
+	}
 }
 
 #define pct_to_real(tunable)	\
