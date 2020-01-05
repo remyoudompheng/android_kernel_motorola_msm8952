@@ -177,7 +177,7 @@ void stml0xx_irq_wake_work_func(struct work_struct *work)
 			0,
 			stm_ws->ts_ns);
 
-		dev_info(&stml0xx_misc_data->spi->dev,
+		dev_dbg(&stml0xx_misc_data->spi->dev,
 			"Sending Proximity distance %d als %d stowed %d raw_prox %d noise_floor %d recal_thresh %d low_thresh %d high_thresh %d\n",
 			buf[WAKE_IRQ_IDX_PROX],
 			SH_TO_UH16(buf + WAKE_IRQ_IDX_PROX_ALS),
